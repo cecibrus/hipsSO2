@@ -1,10 +1,13 @@
-from base_de_datos.definiciones import BD_CONEXION
+from definiciones import BD_CONEXION
 import psycopg2
 from psycopg2 import extras
 from psycopg2 import sql
 
-# Agregar informacion de nuevo usuario
-def add_usuario_registro():
+
+# - - - - -  usuario_registro  - - - - - -
+
+def add_usuario_registro_bd():
+    # Agregar informacion de nuevo usuario
     print("Agregar un nuevo usuario")
     print("[nombre_usuario]: ")
     nombre_usuario = input()
@@ -25,10 +28,8 @@ def add_usuario_registro():
     else:
         print("Error. No se pudo agregar")
 
-
-
-# Obtener lista usuario_informacion
-def obtener_lista_usuario_registro():
+def obtener_lista_usuario_registro_bd():                                   
+    # Obtener lista usuario_informacion
     dbConnection = psycopg2.connect(BD_CONEXION)
     cursor = dbConnection.cursor()
     cursor.execute("SELECT * FROM usuario_registro;")
@@ -36,18 +37,19 @@ def obtener_lista_usuario_registro():
     dbConnection.close()
     return lista_usuario_bd
     
-    
-# Resetear usuario_informacion
-def reset_usuario_registro():
+def reset_usuario_registro_bd():
+    # Resetear usuario_informacion
     dbConnection = psycopg2.connect(BD_CONEXION)
     dbConnection.execute("DELETE FROM usuario_registro")
     dbConnection.commit()
     dbConnection.close()  
 
 
-#CRON
-# Listar cron
-def obtener_lista_cron():
+
+# - - - - -  cron  - - - - - -
+
+def obtener_lista_cron_bd():
+    # Listar cron
     dbConnection = psycopg2.connect(BD_CONEXION)
     cursor = dbConnection.cursor()
     cursor.execute("SELECT * FROM cron;")
@@ -55,8 +57,8 @@ def obtener_lista_cron():
     dbConnection.close()
     return lista_cron
 
-# Agregar cron a la lista blanca de crontabs
-def add_cron():
+def add_cron_bd():
+    # Agregar cron a la lista blanca de crontabs
     print("Crontab con restriccion: (si o no)")
     restriccion = input()
     print("Configuración de tiempo: (solo para comandos con restricciones)")
@@ -79,11 +81,35 @@ def add_cron():
         dbConnection = psycopg2.connect(BD_CONEXION)
         cursor = dbConnection.cursor()
         cursor.execute(sql.SQL(insert_data.format(tupla[0], tupla[1], tupla[2], tupla[3])))
-        dbConnection.commit()
-        dbConnection.close()
+        cursor.commit()
+        cursor.close()
 
-def delete_crontab(usuario):
+def delete_crontab_bd(usuario):
+    # elimina crontab de la tabla cron
     dbConnection = psycopg2.connect(BD_CONEXION)
     dbConnection.execute("DELETE FROM cron")
     dbConnection.commit()
     dbConnection.close()  
+
+
+
+# - - - - -  alarma  - - - - - -
+
+def add_alarma_bd(fecha,alarma):
+    # agrega un alarma a la tabla alarma
+    if len(alarma)>0 and len(fecha)>0:
+        dbConnection = psycopg2.connect(BD_CONEXION)
+        cursor = dbConnection.cursor()
+        insert_data='INSERT INTO alarma(fecha, mensaje) VALUES({},{}) returning id_alarma;'
+        cursor.execute(sql.SQL(insert_data.format(fecha,alarma)))
+        dbConnection.commit()
+        dbConnection.close()
+
+def add_prevencion_bd(fecha, mensaje):
+    if len(fecha)>0 and len(mensaje)>0:
+        dbConnection = psycopg2.connect(BD_CONEXION)
+        cursor = dbConnection.cursor()
+        insert_data='INSERT INTO prevencion(fecha, mensaje) VALUES({},{}) returning id_prevencion;'
+        cursor.execute(sql.SQL(insert_data.format(fecha,mensaje)))
+        dbConnection.commit()
+        dbConnection.close()
