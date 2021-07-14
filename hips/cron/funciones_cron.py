@@ -1,4 +1,3 @@
-from base_de_datos.funciones_bd import obtener_lista_cron
 import os
 import subprocess
 
