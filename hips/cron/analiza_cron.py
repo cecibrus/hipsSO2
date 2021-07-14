@@ -1,11 +1,13 @@
+from usuario.funciones_usuario import encontrar_ip
+from reportes.reporte_alarmas_prevencion import reportar_alarma, reportar_prevencion
 import os
 import subprocess
-from base_de_datos.funciones_bd import obtener_lista_cron
-from cron.funciones_cron import listar_crontabs_en_ejecucion,eliminar_cron
+from base_de_datos.funciones_bd import obtener_lista_cron, obtener_lista_cron_bd
+from cron.funciones_cron import listar_crontabs_en_ejecucion, eliminar_cron
 
 def analizar_crontabs():
     lista_cron = listar_crontabs_en_ejecucion()
-    lista_bd = obtener_lista_cron()
+    lista_bd = obtener_lista_cron_bd()
     
     for cron_en_ejec in lista_cron:
         cron_en_ejec = cron_en_ejec.split('/')
@@ -31,4 +33,8 @@ def analizar_crontabs():
                     break
         if ban==0:
             print("Crontab ilegal. Reportar alarma")
+            mensaje = "Crontab en ejecución desconocido"
+            reportar_alarma(mensaje, encontrar_ip(usuario_cron))
             eliminar_cron(usuario_cron)
+            reportar_prevencion(mensaje, "Crontab eliminado", encontrar_ip(usuario_cron))
+
