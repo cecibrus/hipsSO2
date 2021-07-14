@@ -1,4 +1,4 @@
-from cron.reporte_alarmas_prevencion import reportar_alarma, reportar_prevencion
+from reportes.reporte_alarmas_prevencion import reportar_alarma, reportar_prevencion
 from usuario.funciones_usuario import cambiar_contrasena, cerrar_sesion, eliminar_usuario
 from base_de_datos.funciones_bd import  obtener_lista_usuario_registro
 from definiciones import BD_CONEXION
