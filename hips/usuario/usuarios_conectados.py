@@ -67,3 +67,4 @@ def analizar_usuarios_conectados():
                 reportar_alarma("Intruso en el sistema (usuario clandestino)", usuario_conectado[1])
                 reportar_prevencion("Intruso en el sistema (posible usuario fraudulento o suplantador)", "Cierre de sesion y cambio de contraseña del usuario", usuario_conectado[1])
         
+ 
