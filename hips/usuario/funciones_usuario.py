@@ -31,13 +31,13 @@ def bloquear_usuario(nombre_usuario):
 
 def encontrar_ip(nombre_usuario):
     # Retorna el ip de un usuario a traves del nombre de usuario
-    cmd = "who | awk '{print($5)}' | sed 's/(//g' | sed 's/)//g'"  
+    cmd = "who | awk '{print($1,$5)}' | sed 's/(//g' | sed 's/)//g'"  
     p1 = subprocess.Popen(cmd, shell= True, stdout=subprocess.PIPE, stderr=subprocess.PIPE, universal_newlines=True)
     conectados, err = p1.communicate() 
     lista = conectados.split('\n')
-    ip = ''
+    ip = []
     for usuarios in lista:
         usuario = usuarios.split(' ')
         if usuario[0] == nombre_usuario:
-            ip = usuario[1]
+            ip.append(usuario[1])
     return ip
