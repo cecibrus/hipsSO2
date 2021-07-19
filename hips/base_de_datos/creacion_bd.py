@@ -18,12 +18,14 @@ def inicializar_bd():
             cron_t = "CREATE TABLE IF NOT EXISTS cron(restriccion character varying(3) NOT NULL, config_cron character varying(20), comando character varying(60) NOT NULL);"
             alarma_t = "CREATE TABLE IF NOT EXISTS alarma(id_alarma serial NOT NULL, fecha character varying(20) NOT NULL, mensaje character varying(60) NOT NULL, PRIMARY KEY(id_alarma));"
             prevencion_t= "CREATE TABLE IF NOT EXISTS prevencion(id_prevencion serial NOT NULL, fecha character varying(20) NOT NULL, mensaje character varying(60) NOT NULL, PRIMARY KEY(id_prevencion));"
+            hashes_archivos_t= "CREATE TABLE IF NOT EXISTS hashes_archivos(id_hash serial NOT NULL, nombre_archivo varying(50), hash varying(100), PRIMARY KEY(id_prevencion));"
 
             # EJECUCION DE LOS COMANDOS PARA CREAR TABLAS
             cursor.execute(usuario_registro_t)
             cursor.execute(cron_t)
             cursor.execute(alarma_t)
             cursor.execute(prevencion_t)
+            cursor.execute(hashes_archivos_t)
 
             # VALORES POR DEFAULT
             usuario_registrado = "'root','localhost','0-1-2-3-4-5-6','00:00-23:00'"
@@ -34,6 +36,7 @@ def inicializar_bd():
             # CADENAS DE INSERT
             usuario_registro_i='INSERT INTO usuario_registro(nombre_usuario, ip_permitida, dias_permitidos, rango_horario_permitido) VALUES({},{},{},{}) returning nombre_usuario;'
             cron_i='INSERT INTO cron(restriccion, config_cron, comando) VALUES({},{},{});'
+            hashes_i='INSERT INTO hashes_archivos(nombre_archivo, hash) VALUES ({},{})'
 
             # INSERT EN LAS TABLAS
             # usuario_registro

@@ -1,6 +1,7 @@
 import sys
 sys.path.insert(0, '/root/hips')
 from definiciones import BD_CONEXION
+import hashes_i
 import psycopg2
 from psycopg2 import extras
 from psycopg2 import sql
@@ -106,3 +107,34 @@ def add_prevencion_bd(fecha, mensaje):
         cursor.execute(sql.SQL(insert_data.format("'" + fecha + "'" + mensaje + "'")))
         dbConnection.commit()
         dbConnection.close()
+
+
+
+# - - - - -  archivos  - - - - - -
+def add_hash_archivo(nombre_archivo, hash):
+    # Agregar informacion de nuevo usuario
+    if len(nombre_archivo)>0 and len(hash)>0:
+        insert_data='INSERT INTO usuario_registro(nombre_usuario, ip_permitida, dias_permitidos, rango_horario_permitido) VALUES({},{},{},{}) returning nombre_usuario;'
+        dbConnection = psycopg2.connect(BD_CONEXION)
+        cursor = dbConnection.cursor()
+        cursor.execute(sql.SQL(insert_data.format(nombre_archivo, hash))
+        dbConnection.commit()
+        dbConnection.close()
+    else:
+        print("Error. No se pudo agregar hash a la BD")
+
+def obtener_hash_archivo(nombre_archivo):                                   
+    # Obtener lista usuario_informacion
+    dbConnection = psycopg2.connect(BD_CONEXION)
+    cursor = dbConnection.cursor()
+    cursor.execute("SELECT hash FROM hashes_archivos;")
+    lista_usuario_bd = cursor.fetchall()
+    dbConnection.close()
+    return lista_usuario_bd
+
+def actualizar_hash(nombre_archivo, hash):
+    # Obtener lista usuario_informacion
+    dbConnection = psycopg2.connect(BD_CONEXION)
+    cursor = dbConnection.cursor()
+    cursor.execute(("UPDATE hash FROM hashes_archivos WHERE nombre_archivo={};").format(nombre_archivo))
+    dbConnection.close()
