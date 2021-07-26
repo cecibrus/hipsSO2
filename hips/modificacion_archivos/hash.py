@@ -1,10 +1,10 @@
 import sys
 sys.path.insert(0, '/root/hips/reportes')
-from reporte_alarmas_prevencion import reportar_alarma
+from reportes.reporte_alarmas_prevencion import reportar_alarma
 import os
 import subprocess
 sys.path.insert(0, '/root/hips/base_de_datos')
-from funciones_bd import obtener_lista_cron_bd, obtener_lista_cron_bd
+from base_de_datos.funciones_bd import add_hash_archivo
 import hashlib
 
 

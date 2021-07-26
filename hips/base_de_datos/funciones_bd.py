@@ -1,7 +1,7 @@
 import sys
 sys.path.insert(0, '/root/hips')
 from definiciones import BD_CONEXION
-import hashes_i
+from creacion_bd import hashes_i
 import psycopg2
 from psycopg2 import extras
 from psycopg2 import sql
@@ -112,12 +112,12 @@ def add_prevencion_bd(fecha, mensaje):
 
 # - - - - -  archivos  - - - - - -
 def add_hash_archivo(nombre_archivo, hash):
-    # Agregar informacion de nuevo usuario
+    # Agregar informacion de nuevo hash
     if len(nombre_archivo)>0 and len(hash)>0:
         insert_data='INSERT INTO usuario_registro(nombre_usuario, ip_permitida, dias_permitidos, rango_horario_permitido) VALUES({},{},{},{}) returning nombre_usuario;'
         dbConnection = psycopg2.connect(BD_CONEXION)
         cursor = dbConnection.cursor()
-        cursor.execute(sql.SQL(insert_data.format(nombre_archivo, hash))
+        cursor.execute(sql.SQL(insert_data.format(nombre_archivo, hash)))
         dbConnection.commit()
         dbConnection.close()
     else:
@@ -137,4 +137,28 @@ def actualizar_hash(nombre_archivo, hash):
     dbConnection = psycopg2.connect(BD_CONEXION)
     cursor = dbConnection.cursor()
     cursor.execute(("UPDATE hash FROM hashes_archivos WHERE nombre_archivo={};").format(nombre_archivo))
+    dbConnection.commit()
     dbConnection.close()
+
+
+# - - - - - sniffers - - - - -
+def add_sniffers():
+    #se carga la lista negra con una lista predeterminada
+    lista_negra_sniffers=['tcpdump','wireshark','kismet','cloudShark','ettercap','sysdig']
+    insert_data='INSERT INTO sniffers(nombre) VALUES({}) returning nombre;'
+    dbConnection = psycopg2.connect(BD_CONEXION)
+    cursor = dbConnection.cursor()
+    for nombre in lista_negra_sniffers:
+        cursor.execute(sql.SQL(insert_data.format(nombre)))
+    dbConnection.commit()
+    dbConnection.close()
+
+
+def obtener_lista_negra_sniffers():
+    #se busca la lista negra de procesos que son sniffers
+    dbConnection = psycopg2.connect(BD_CONEXION)
+    cursor = dbConnection.cursor()
+    cursor.execute("SELECT nombre FROM sniffers;")
+    lista_negra = cursor.fetchall()
+    dbConnection.close()
+    return lista_negra
