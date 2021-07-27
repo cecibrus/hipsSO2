@@ -20,13 +20,18 @@ def inicializar_bd():
             prevencion_t= "CREATE TABLE IF NOT EXISTS prevencion(id_prevencion serial NOT NULL, fecha character varying(20) NOT NULL, mensaje character varying(60) NOT NULL, PRIMARY KEY(id_prevencion));"
             hashes_archivos_t= "CREATE TABLE IF NOT EXISTS hashes_archivos(id_hash serial NOT NULL, nombre_archivo varying(50), hash varying(100), PRIMARY KEY(id_hash));"
             sniffers_t= "CREATE TABLE IF NOT EXISTS sniffers(id_sniffer serial NOT NULL, nombre varying(100) PRIMARY KEY(id_sniffer));"
-            
+            correo_t = "CREATE TABLE IF NOT EXISTS correo_config(id_correo serial NOT NULL, usuario_nombre character varying(20), mail character varying(60), passwd character varying(60), PRIMARY KEY(id_correo));"
 
+             # LISTA NEGRA
+            correo_lista_negra = "CREATE TABLE IF NOT EXISTS lista_negra_correo(correo character varyin(100), PRIMARY KEY(correo));"
+            
             # EJECUCION DE LOS COMANDOS PARA CREAR TABLAS
             cursor.execute(usuario_registro_t)
             cursor.execute(cron_t)
             cursor.execute(alarma_t)
             cursor.execute(prevencion_t)
+            cursor.execute(correo_t)
+            cursor.execute(correo_lista_negra)
             cursor.execute(hashes_archivos_t)
             cursor.execute(sniffers_t)
 
@@ -35,7 +40,9 @@ def inicializar_bd():
             usuario_registrado = usuario_registrado.split(',')
             cron = "'si','* * * * root','echo date >> pruebacron.txt'_'no','','echo hola >> pruebacron2.txt'"            
             resul = cron.split('_')           
-
+            correo = "'admin' 'so2.hips2021@gmail.com' 'Tpso22021.'"            
+            correo = correo.split(' ')
+            
             # CADENAS DE INSERT
             usuario_registro_i='INSERT INTO usuario_registro(nombre_usuario, ip_permitida, dias_permitidos, rango_horario_permitido) VALUES({},{},{},{}) returning nombre_usuario;'
             cron_i='INSERT INTO cron(restriccion, config_cron, comando) VALUES({},{},{});'
@@ -48,6 +55,8 @@ def inicializar_bd():
             for dato in resul:
                     aux = dato.split(',')
                     cursor.execute(sql.SQL(cron_i.format(aux[0], aux[1], aux[2])))
+            # correo
+            cursor.execute(sql.SQL(correo_i.format(correo[0], correo[1], correo[2])))
             dbConnection.commit()
         except psycopg2.DatabaseError as b:
             print(b)
