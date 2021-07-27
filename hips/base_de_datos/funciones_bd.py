@@ -85,7 +85,7 @@ def delete_crontab_bd():
 
 
 
-# - - - - -  alarma  - - - - - -
+# - - - - -  reportes  - - - - - -
 
 def add_alarma_bd(fecha,mensaje):
     # agrega un alarma a la tabla alarma
@@ -104,9 +104,52 @@ def add_prevencion_bd(fecha, mensaje):
         dbConnection = psycopg2.connect(BD_CONEXION)
         cursor = dbConnection.cursor()
         insert_data='INSERT INTO prevencion(fecha, mensaje) VALUES({},{});'
-        cursor.execute(sql.SQL(insert_data.format("'" + fecha + "'" + mensaje + "'")))
+        cursor.execute(sql.SQL(insert_data.format("'" + fecha + "'" , mensaje + "'")))
         dbConnection.commit()
         dbConnection.close()
+
+
+
+# - - - - -  correo  - - - - - -
+def obtener_parametros_correo_bd(usuario):
+    dbConnection = psycopg2.connect(BD_CONEXION)
+    cursor = dbConnection.cursor()
+    cmd = "SELECT * FROM mail_configuracion WHERE usuario_nombre =" + usuario + ";" 
+    cursor.execute(cmd)
+    lista = cursor.fetchone()
+    cursor.close()
+    return lista 
+
+def add_lista_negra_correo_bd(correo):
+    dbConnection = psycopg2.connect(BD_CONEXION)
+    cursor = dbConnection.cursor()
+    cmd = 'INSERT INTO lista_negra_correo(correo) VALUES({});'
+    cursor.execute(sql.SQL(cmd.format("'" + correo + "'" )))
+    cursor.execute(cmd)
+    cursor.close()
+
+def obtener_lista_negra_correo_bd():
+    dbConnection = psycopg2.connect(BD_CONEXION)
+    cursor = dbConnection.cursor()
+    cmd = "SELECT * FROM lista_negra_correo;" 
+    cursor.execute(cmd)
+    lista = cursor.fetchall()
+    cursor.close()
+    return lista
+
+
+# - - - - -  procesos  - - - - - -
+def obtener_lista_blanca_proc_bd():
+    dbConnection = psycopg2.connect(BD_CONEXION)
+    cursor = dbConnection.cursor()
+    cmd = "SELECT * FROM lista_blanca_proc;" 
+    cursor.execute(cmd)
+    lista = cursor.fetchall()
+    cursor.close()
+    return lista
+
+
+
 
 
 
