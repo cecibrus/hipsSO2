@@ -1,0 +1,37 @@
+.hide {
+    display: none;
+}
+
+.box {
+    width: 320px;
+    height: 420px;
+    top: 20%;
+    left: 80%;
+    position: absolute;
+    transform: translate(-50%, -50%);
+    box-sizing: border-box;
+    padding: 70px 30px;
+}
+body {
+    margin: 0;
+    padding: 30;
+    background: url(fondo.jpg) no-repeat center top;
+    background-size: cover;
+    font-family: sans-serif;
+    height: 100vh;
+}
+.box button[type="submit"] {
+    border: none;
+    outline: none;
+    height: 40px;
+    background: #b80f22;
+    color: #fff;
+    font-size: 18px;
+    border-radius: 20px;
+  }
+  
+.box button[type="submit"]:hover {
+    cursor: pointer;
+    background: #ffc107;
+    color: #000;
+}
