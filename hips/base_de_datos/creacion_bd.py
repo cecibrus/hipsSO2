@@ -18,12 +18,12 @@ def inicializar_bd():
             cron_t = "CREATE TABLE IF NOT EXISTS cron(restriccion character varying(3) NOT NULL, config_cron character varying(20), comando character varying(60) NOT NULL);"
             alarma_t = "CREATE TABLE IF NOT EXISTS alarma(id_alarma serial NOT NULL, fecha character varying(20) NOT NULL, mensaje character varying(60) NOT NULL, PRIMARY KEY(id_alarma));"
             prevencion_t= "CREATE TABLE IF NOT EXISTS prevencion(id_prevencion serial NOT NULL, fecha character varying(20) NOT NULL, mensaje character varying(60) NOT NULL, PRIMARY KEY(id_prevencion));"
-            hashes_archivos_t= "CREATE TABLE IF NOT EXISTS hashes_archivos(id_hash serial NOT NULL, nombre_archivo varying(50), hash varying(100), PRIMARY KEY(id_hash));"
-            sniffers_t= "CREATE TABLE IF NOT EXISTS sniffers(id_sniffer serial NOT NULL, nombre varying(100) PRIMARY KEY(id_sniffer));"
+            hashes_archivos_t= "CREATE TABLE IF NOT EXISTS hashes_archivos(id_hash serial NOT NULL, nombre_archivo character varying(50), hash character varying(100), PRIMARY KEY(id_hash));"
+            sniffers_t= "CREATE TABLE IF NOT EXISTS sniffers(id_sniffer serial NOT NULL, nombre character varying(100), PRIMARY KEY(id_sniffer));"
             correo_t = "CREATE TABLE IF NOT EXISTS correo_config(id_correo serial NOT NULL, usuario_nombre character varying(20), mail character varying(60), passwd character varying(60), PRIMARY KEY(id_correo));"
 
              # LISTA NEGRA
-            correo_lista_negra = "CREATE TABLE IF NOT EXISTS lista_negra_correo(correo character varyin(100), PRIMARY KEY(correo));"
+            correo_lista_negra = "CREATE TABLE IF NOT EXISTS lista_negra_correo(correo character varying(100), PRIMARY KEY(correo));"
             
             # EJECUCION DE LOS COMANDOS PARA CREAR TABLAS
             cursor.execute(usuario_registro_t)
@@ -47,6 +47,7 @@ def inicializar_bd():
             usuario_registro_i='INSERT INTO usuario_registro(nombre_usuario, ip_permitida, dias_permitidos, rango_horario_permitido) VALUES({},{},{},{}) returning nombre_usuario;'
             cron_i='INSERT INTO cron(restriccion, config_cron, comando) VALUES({},{},{});'
             hashes_i='INSERT INTO hashes_archivos(nombre_archivo, hash) VALUES ({},{});'
+            correo_i='INSERT INTO correo_config(usuario_nombre, mail, passwd) VALUES ({},{},{});'
 
             # INSERT EN LAS TABLAS
             # usuario_registro
