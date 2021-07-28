@@ -5,8 +5,8 @@ from reportes.reporte_alarmas_prevencion import reportar_alarma, reportar_preven
 import os
 import subprocess
 from base_de_datos.funciones_bd import obtener_lista_negra_sniffers
-sys.path.insert(0, '/root/hips/base_de_datos')
-from amenazas.funciones_prevencion import matar_proceso
+sys.path.insert(0, '/root/hips/proceso')
+from proceso.funciones_procesos import kill_proc
 
 
 def interfaces_promiscuas():
@@ -23,7 +23,7 @@ def buscar_sniffers():
         for proceso in outputs:
             reportar_alarma('Aplicacion sniffer detectada:' + str(line))
             reportar_prevencion('Se detuvo la aplicacion'+ str(proceso) + 'y se envio el archivo a cuarentena')
-            matar_proceso(proceso)
+            kill_proc(proceso)
 
 
 def analizar_sniffers():

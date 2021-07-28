@@ -1,3 +1,4 @@
+from hips.definiciones import MAX_COLA_CORREOS
 import sys
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
@@ -5,6 +6,8 @@ import smtplib
 import subprocess
 sys.path.insert(0, '/root/hips/base_de_datos')
 from funciones_bd import obtener_mail_configuracion
+sys.path.insert(0, '/root/hips/reportes')
+from reportes.reporte_alarmas_prevencion import reportar_alarma, reportar_prevencion
 
 
 def enviar_correo(receptor, subject, body):
@@ -35,3 +38,13 @@ def reject_email(correo):
     p1 =subprocess.Popen(cmd, stdout=subprocess.PIPE, shell=True)
     output, err = p1.communicate()
 
+def verificar_cola():
+    p =subprocess.Popen("mailq", stdout=subprocess.PIPE, shell=True)
+    output, err = p.communicate()
+    cola= output.decode("utf-8").splitlines()
+    if len(cola)>MAX_COLA_CORREOS:
+        #se detiene el servicio de correo 
+        p =subprocess.Popen("service postfix stop", stdout=subprocess.PIPE, shell=True)
+        output, err = p.communicate()
+        reportar_alarma("Se supero el limite de la cola de correos")
+        reportar_prevencion("Se supero el limite de la cola de correos", "Se detuvo el servicio de correo")

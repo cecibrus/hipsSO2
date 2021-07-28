@@ -9,7 +9,7 @@ import hashlib
 
 
 #Compara el hash de ka base de datos con el de
-def compare_hash(nombre_archivo, hash_esperado):
+def analisis_hash(nombre_archivo, hash_esperado):
     md5_hash = hashlib.md5()
     archivo = None
 

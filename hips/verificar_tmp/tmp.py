@@ -21,3 +21,6 @@ def buscar_ejecutable_o_sospechoso():
             cuarentena(archivo)
             reportar_alarma("Se encontro un posible script en el directorio /tmp")
             reportar_prevencion("Se movio el posible script a cuarentena desde /tmp")
+
+def analisis_tmp():
+    buscar_ejecutable_o_sospechoso()
