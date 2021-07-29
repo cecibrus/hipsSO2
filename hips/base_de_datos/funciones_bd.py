@@ -1,10 +1,12 @@
 import sys
 sys.path.insert(0, '/root/hips')
 from definiciones import BD_CONEXION
+sys.path.insert(0, '/root/hips/base_de_datos')
 from creacion_bd import hashes_i
 import psycopg2
 from psycopg2 import extras
 from psycopg2 import sql
+
 
 
 # - - - - -  usuario_registro  - - - - - -
@@ -28,15 +30,19 @@ def add_usuario_registro_bd(lista_usuario):
 
 def obtener_lista_usuario_registro_bd():                                   
     # Obtener lista usuario_informacion
+    if (psycopg2.connect(BD_CONEXION)):
+        psycopg2.connect(BD_CONEXION).close()
     dbConnection = psycopg2.connect(BD_CONEXION)
     cursor = dbConnection.cursor()
     cursor.execute("SELECT * FROM usuario_registro;")
     lista_usuario_bd = cursor.fetchall()
-    dbConnection.close()
+    psycopg2.connect(BD_CONEXION).close()
     return lista_usuario_bd
     
 def reset_usuario_registro_bd():
     # Resetear usuario_informacion
+    if (psycopg2.connect(BD_CONEXION)):
+        psycopg2.connect(BD_CONEXION).close()
     dbConnection = psycopg2.connect(BD_CONEXION)
     dbConnection.execute("DELETE FROM usuario_registro")
     dbConnection.commit()
@@ -48,6 +54,8 @@ def reset_usuario_registro_bd():
 
 def obtener_lista_cron_bd():
     # Listar cron
+    if (psycopg2.connect(BD_CONEXION)):
+        psycopg2.connect(BD_CONEXION).close()
     dbConnection = psycopg2.connect(BD_CONEXION)
     cursor = dbConnection.cursor()
     cursor.execute("SELECT * FROM cron;")
@@ -57,6 +65,8 @@ def obtener_lista_cron_bd():
 
 def add_cron_bd(lista_cron):
     # Agregar cron a la lista blanca de crontabs
+    if (psycopg2.connect(BD_CONEXION)):
+        psycopg2.connect(BD_CONEXION).close()
     restriccion = lista_cron[0]
     config_cron = lista_cron[1]
     comando = lista_cron[2]
@@ -78,6 +88,8 @@ def add_cron_bd(lista_cron):
 
 def delete_crontab_bd():
     # elimina crontab de la tabla cron
+    if (psycopg2.connect(BD_CONEXION)):
+        psycopg2.connect(BD_CONEXION).close()
     dbConnection = psycopg2.connect(BD_CONEXION)
     dbConnection.execute("DELETE FROM cron")
     dbConnection.commit()
@@ -89,6 +101,8 @@ def delete_crontab_bd():
 
 def add_alarma_bd(fecha,mensaje):
     # agrega un alarma a la tabla alarma
+    if (psycopg2.connect(BD_CONEXION)):
+        psycopg2.connect(BD_CONEXION).close()
     if len(mensaje)>0 and len(fecha)>0:
         print("Add alarma bd entro")
         dbConnection = psycopg2.connect(BD_CONEXION)
@@ -100,6 +114,8 @@ def add_alarma_bd(fecha,mensaje):
         dbConnection.close()
 
 def add_prevencion_bd(fecha, mensaje):
+    if (psycopg2.connect(BD_CONEXION)):
+        psycopg2.connect(BD_CONEXION).close()
     if len(fecha)>0 and len(mensaje)>0:
         dbConnection = psycopg2.connect(BD_CONEXION)
         cursor = dbConnection.cursor()
@@ -112,15 +128,19 @@ def add_prevencion_bd(fecha, mensaje):
 
 # - - - - -  correo  - - - - - -
 def obtener_parametros_correo_bd(usuario):
+    if (psycopg2.connect(BD_CONEXION)):
+        psycopg2.connect(BD_CONEXION).close()
     dbConnection = psycopg2.connect(BD_CONEXION)
     cursor = dbConnection.cursor()
-    cmd = "SELECT * FROM mail_configuracion WHERE usuario_nombre =" + usuario + ";" 
+    cmd = "SELECT * FROM correo_config WHERE usuario_nombre = " +"'"+usuario + "'"+ ";" 
     cursor.execute(cmd)
     lista = cursor.fetchone()
     cursor.close()
     return lista 
 
 def add_lista_negra_correo_bd(correo):
+    if (psycopg2.connect(BD_CONEXION)):
+        psycopg2.connect(BD_CONEXION).close()
     dbConnection = psycopg2.connect(BD_CONEXION)
     cursor = dbConnection.cursor()
     cmd = 'INSERT INTO lista_negra_correo(correo) VALUES({});'
@@ -129,6 +149,8 @@ def add_lista_negra_correo_bd(correo):
     cursor.close()
 
 def obtener_lista_negra_correo_bd():
+    if (psycopg2.connect(BD_CONEXION)):
+        psycopg2.connect(BD_CONEXION).close()
     dbConnection = psycopg2.connect(BD_CONEXION)
     cursor = dbConnection.cursor()
     cmd = "SELECT * FROM lista_negra_correo;" 
@@ -140,6 +162,8 @@ def obtener_lista_negra_correo_bd():
 
 # - - - - -  procesos  - - - - - -
 def obtener_lista_blanca_proc_bd():
+    if (psycopg2.connect(BD_CONEXION)):
+        psycopg2.connect(BD_CONEXION).close()
     dbConnection = psycopg2.connect(BD_CONEXION)
     cursor = dbConnection.cursor()
     cmd = "SELECT * FROM lista_blanca_proc;" 
