@@ -5,17 +5,17 @@ from email.mime.text import MIMEText
 import smtplib
 import subprocess
 sys.path.insert(0, '/root/hips/base_de_datos')
-from funciones_bd import obtener_mail_configuracion
+from funciones_bd import obtener_parametros_correo_bd
 sys.path.insert(0, '/root/hips/reportes')
 from reportes.reporte_alarmas_prevencion import reportar_alarma, reportar_prevencion
 
 
+
 def enviar_correo(receptor, subject, body):
-    lista = obtener_mail_configuracion ("admin")
+    lista = obtener_parametros_correo_bd ("admin")
     correo = lista[2]
     passwd = lista[3]
 
- 
     mensaje = MIMEMultipart()
     # Establecemos los parametros 
     mensaje['From'] = correo
@@ -26,17 +26,17 @@ def enviar_correo(receptor, subject, body):
     # Establecemos el servidor
     servidor = smtplib.SMTP('smtp.gmail.com: 587')
     servidor.starttls()
-
     servidor.login(correo, passwd)
-    servidor.sendmail(mensaje)
-
+    servidor.send_message(mensaje)
     del mensaje
     servidor.quit()
 
+    
 def reject_email(correo):
     cmd = "echo " + correo + "> /etc/postfix/access"
     p1 =subprocess.Popen(cmd, stdout=subprocess.PIPE, shell=True)
     output, err = p1.communicate()
+
 
 def verificar_cola():
     p =subprocess.Popen("mailq", stdout=subprocess.PIPE, shell=True)
