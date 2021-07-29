@@ -2,7 +2,6 @@ import sys
 sys.path.insert(0, '/root/hips')
 from definiciones import BD_CONEXION
 sys.path.insert(0, '/root/hips/base_de_datos')
-from creacion_bd import hashes_i
 import psycopg2
 from psycopg2 import extras
 from psycopg2 import sql
@@ -102,25 +101,26 @@ def delete_crontab_bd():
 def add_alarma_bd(fecha,mensaje):
     # agrega un alarma a la tabla alarma
     if (psycopg2.connect(BD_CONEXION)):
+        print("Hay conexion\n")
         psycopg2.connect(BD_CONEXION).close()
     if len(mensaje)>0 and len(fecha)>0:
-        print("Add alarma bd entro")
         dbConnection = psycopg2.connect(BD_CONEXION)
         cursor = dbConnection.cursor()
         insert_data='INSERT INTO alarma(fecha, mensaje) VALUES({},{});'
-        cursor.execute(sql.SQL(insert_data.format("'" + fecha + "'","'" + mensaje + "'")))
+        cursor.execute(sql.SQL(insert_data.format("'" + fecha + "'" , "'" + mensaje + "'")))
         print(cursor.fetchall())
         dbConnection.commit()
         dbConnection.close()
 
 def add_prevencion_bd(fecha, mensaje):
     if (psycopg2.connect(BD_CONEXION)):
+        print("Hay conexion\n")
         psycopg2.connect(BD_CONEXION).close()
     if len(fecha)>0 and len(mensaje)>0:
         dbConnection = psycopg2.connect(BD_CONEXION)
         cursor = dbConnection.cursor()
         insert_data='INSERT INTO prevencion(fecha, mensaje) VALUES({},{});'
-        cursor.execute(sql.SQL(insert_data.format("'" + fecha + "'" , mensaje + "'")))
+        cursor.execute(sql.SQL(insert_data.format("'" + fecha + "'" , "'" + mensaje + "'")))
         dbConnection.commit()
         dbConnection.close()
 
@@ -180,6 +180,8 @@ def obtener_lista_blanca_proc_bd():
 # - - - - -  archivos  - - - - - -
 def add_hash_archivo(nombre_archivo, hash):
     # Agregar informacion de nuevo hash
+    if (psycopg2.connect(BD_CONEXION)):
+        psycopg2.connect(BD_CONEXION).close()
     if len(nombre_archivo)>0 and len(hash)>0:
         insert_data='INSERT INTO usuario_registro(nombre_usuario, ip_permitida, dias_permitidos, rango_horario_permitido) VALUES({},{},{},{}) returning nombre_usuario;'
         dbConnection = psycopg2.connect(BD_CONEXION)
@@ -192,6 +194,8 @@ def add_hash_archivo(nombre_archivo, hash):
 
 def obtener_hash_archivo(nombre_archivo):                                   
     # Obtener lista usuario_informacion
+    if (psycopg2.connect(BD_CONEXION)):
+        psycopg2.connect(BD_CONEXION).close()
     dbConnection = psycopg2.connect(BD_CONEXION)
     cursor = dbConnection.cursor()
     cursor.execute("SELECT hash FROM hashes_archivos;")
@@ -201,6 +205,8 @@ def obtener_hash_archivo(nombre_archivo):
 
 def actualizar_hash(nombre_archivo, hash):
     # Obtener lista usuario_informacion
+    if (psycopg2.connect(BD_CONEXION)):
+        psycopg2.connect(BD_CONEXION).close()
     dbConnection = psycopg2.connect(BD_CONEXION)
     cursor = dbConnection.cursor()
     cursor.execute(("UPDATE hash FROM hashes_archivos WHERE nombre_archivo={};").format(nombre_archivo))
@@ -211,6 +217,8 @@ def actualizar_hash(nombre_archivo, hash):
 # - - - - - sniffers - - - - -
 def add_sniffers():
     #se carga la lista negra con una lista predeterminada
+    if (psycopg2.connect(BD_CONEXION)):
+        psycopg2.connect(BD_CONEXION).close()
     lista_negra_sniffers=['tcpdump','wireshark','kismet','cloudShark','ettercap','sysdig']
     insert_data='INSERT INTO sniffers(nombre) VALUES({}) returning nombre;'
     dbConnection = psycopg2.connect(BD_CONEXION)
@@ -223,6 +231,8 @@ def add_sniffers():
 
 def obtener_lista_negra_sniffers():
     #se busca la lista negra de procesos que son sniffers
+    if (psycopg2.connect(BD_CONEXION)):
+        psycopg2.connect(BD_CONEXION).close()
     dbConnection = psycopg2.connect(BD_CONEXION)
     cursor = dbConnection.cursor()
     cursor.execute("SELECT nombre FROM sniffers;")
